@@ -29,9 +29,6 @@ type TokenData = {
 }
 
 export const TokenFetcher = () => {
-  const currentToastId = useRef('')
-  const [, setIsFetching] = useState(false)
-
   const {
     data: badgeAddresses,
     isError: badgeIsError,
@@ -95,6 +92,9 @@ export const TokenFetcher = () => {
       refetchTokensData()
     }
   }, [tokenIdsData, refetchTokensData])
+
+  const currentToastId = useRef('')
+  const [, setIsFetching] = useState(false)
 
   useEffect(() => {
     // Dismiss the current toast when the state changes
