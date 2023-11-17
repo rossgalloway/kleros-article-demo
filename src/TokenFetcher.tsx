@@ -26,7 +26,6 @@ type TokenData = {
   symbolMultihash: string
   status: number
   decimals: bigint
-  balance?: bigint
 }
 
 export const TokenFetcher = () => {
@@ -34,7 +33,7 @@ export const TokenFetcher = () => {
   const [, setIsFetching] = useState(false)
 
   const {
-    data: badgeData,
+    data: badgeAddresses,
     isError: badgeIsError,
     isLoading: badgeIsLoading,
     refetch: refetchBadgeData
@@ -54,9 +53,9 @@ export const TokenFetcher = () => {
   } = useContractRead({
     ...tokensViewContractConfig,
     functionName: 'getTokensIDsForAddresses',
-    args: [t2crAddr, badgeData as Address[]],
-    enabled: false,
-    select: (tokenIdsData) => [...tokenIdsData] //spread operator to convert to array
+    args: [t2crAddr, badgeAddresses as Address[]],
+    enabled: false
+    // select: (data) => [...data] //spread operator to convert to array
   })
 
   const {
@@ -86,21 +85,16 @@ export const TokenFetcher = () => {
   }, [refetchBadgeData])
 
   useEffect(() => {
-    if (badgeData) {
+    if (badgeAddresses) {
       refetchTokenIdsData()
     }
-  }, [badgeData, refetchTokenIdsData])
+  }, [badgeAddresses, refetchTokenIdsData])
 
   useEffect(() => {
     if (tokenIdsData) {
       refetchTokensData()
     }
   }, [tokenIdsData, refetchTokensData])
-
-  useEffect(() => {
-    if (badgeIsLoading || tokenIdsIsLoading || tokensDataIsLoading)
-      setIsFetching(true)
-  }, [badgeIsLoading, tokenIdsIsLoading, tokensDataIsLoading])
 
   useEffect(() => {
     // Dismiss the current toast when the state changes
